@@ -1,0 +1,1227 @@
+#AUTOR: Arnon Rodak
+#Data: 23/11/2019
+#Descrição: Análise estatística básica, do arquivo de qualidade do ar de Pequim.
+
+library(ggplot2)
+
+#Abertura dos arquivos da base
+base1=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Aotizhongxin_20130301-20170228.csv",TRUE,",")
+base2=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Changping_20130301-20170228.csv",TRUE,",")
+base3=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Dingling_20130301-20170228.csv",TRUE,",")
+base4=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Dongsi_20130301-20170228.csv",TRUE,",")
+base5=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Guanyuan_20130301-20170228.csv",TRUE,",")
+base6=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Gucheng_20130301-20170228.csv",TRUE,",")
+base7=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Huairou_20130301-20170228.csv",TRUE,",")
+base8=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Nongzhanguan_20130301-20170228.csv",TRUE,",")
+base9=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Shunyi_20130301-20170228.csv",TRUE,",")
+base10=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Tiantan_20130301-20170228.csv",TRUE,",")
+base11=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Wanliu_20130301-20170228.csv",TRUE,",")
+base12=read.csv("C:\\Users\\Arnon\\Desktop\\Air_quality\\PRSA_Data_Wanshouxigong_20130301-20170228.csv",TRUE,",")
+
+#//////////////////////////////////////PM2.5///////////////////////////////////
+#Criar uma nova base só com a variável a ser explorada #PM2.5
+bases=c(base1$PM2.5,
+        base2$PM2.5,
+        base3$PM2.5,
+        base4$PM2.5,
+        base5$PM2.5,
+        base6$PM2.5,
+        base7$PM2.5,
+        base8$PM2.5,
+        base9$PM2.5,
+        base10$PM2.5,
+        base11$PM2.5,
+        base12$PM2.5)
+
+
+#Criar uma nova base com os nomes das estações
+realname = data.frame(stations=c(replicate("Aotizhongxin",n=35064),
+                                 replicate("Changping",n=35064),
+                                 replicate("Dingling",n=35064),
+                                 replicate("Dongsi",n=35064),
+                                 replicate("Guanyuan",n=35064),
+                                 replicate("Gucheng", n=35064),
+                                 replicate("Huairou", n=35064),
+                                 replicate("Nongzhanguan",n=35064),
+                                 replicate("Shunyi",n=35064),
+                                 replicate("Tiantan",n=35064),
+                                 replicate("Wanliu",n=35064),
+                                 replicate("Wanshouxigong", n=35064)))
+
+#Transforma a base em data.frame
+bases=data.frame(bases)
+
+
+#Juntar os dados com os nomes.
+nova_base=cbind(bases,realname)
+
+#Excluir as bases que já não precisa mais
+rm(realname)
+rm(bases)
+
+#Análise de dispersão:
+#Todas as bases
+PM2.5=nova_base$bases
+
+media= mean(PM2.5, na.rm=TRUE)
+desvp= sd(PM2.5, na.rm=TRUE)
+limsup= abs(media+desvp)
+liminf= abs(media-desvp)
+
+
+#Apenas base_1
+PM2.5_base1=base1$PM2.5
+
+media_1= mean(PM2.5_base1, na.rm=TRUE)
+desvp_1= sd(PM2.5_base1, na.rm=TRUE)
+limsup_1= abs(media_1+desvp_1)
+liminf_1= abs(media_1-desvp_1)
+
+
+#Apenas base_2
+PM2.5_base2=base2$PM2.5
+
+media_2= mean(PM2.5_base2, na.rm=TRUE)
+desvp_2= sd(PM2.5_base2, na.rm=TRUE)
+limsup_2= abs(media_2+desvp_2)
+liminf_2= abs(media_2-desvp_2)
+
+#Apenas base_3
+PM2.5_base3=base3$PM2.5
+
+media_3= mean(PM2.5_base3, na.rm=TRUE)
+desvp_3= sd(PM2.5_base3, na.rm=TRUE)
+limsup_3= abs(media_3+desvp_3)
+liminf_3= abs(media_3-desvp_3)
+
+
+#Apenas base_4
+PM2.5_base4=base4$PM2.5
+
+media_4= mean(PM2.5_base4, na.rm=TRUE)
+desvp_4= sd(PM2.5_base4, na.rm=TRUE)
+limsup_4= abs(media_4+desvp_4)
+liminf_4= abs(media_4-desvp_4)
+
+
+#Apenas base_5
+PM2.5_base5=base5$PM2.5
+
+media_5= mean(PM2.5_base5, na.rm=TRUE)
+desvp_5= sd(PM2.5_base5, na.rm=TRUE)
+limsup_5= abs(media_5+desvp_5)
+liminf_5= abs(media_5-desvp_5)
+
+
+#Apenas base_6
+PM2.5_base6=base6$PM2.5
+
+media_6= mean(PM2.5_base6, na.rm=TRUE)
+desvp_6= sd(PM2.5_base6, na.rm=TRUE)
+limsup_6= abs(media_6+desvp_6)
+liminf_6= abs(media_6-desvp_6)
+
+
+#Apenas base_7
+PM2.5_base7=base7$PM2.5
+
+media_7= mean(PM2.5_base7, na.rm=TRUE)
+desvp_7= sd(PM2.5_base7, na.rm=TRUE)
+limsup_7= abs(media_7+desvp_7)
+liminf_7= abs(media_7-desvp_7)
+
+
+#Apenas base_8
+PM2.5_base8=base8$PM2.5
+
+media_8= mean(PM2.5_base8, na.rm=TRUE)
+desvp_8= sd(PM2.5_base8, na.rm=TRUE)
+limsup_8= abs(media_8+desvp_8)
+liminf_8= abs(media_8-desvp_8)
+
+
+#Apenas base_9
+PM2.5_base9=base9$PM2.5
+
+media_9= mean(PM2.5_base9, na.rm=TRUE)
+desvp_9= sd(PM2.5_base9, na.rm=TRUE)
+limsup_9= abs(media_9+desvp_9)
+liminf_5= abs(media_9-desvp_9)
+
+
+#Apenas base_10
+PM2.5_base10=base10$PM2.5
+
+media_10= mean(PM2.5_base10, na.rm=TRUE)
+desvp_10= sd(PM2.5_base10, na.rm=TRUE)
+limsup_10= abs(media_10+desvp_10)
+liminf_10= abs(media_10-desvp_10)
+
+
+#Apenas base_11
+PM2.5_base11=base11$PM2.5
+
+media_11= mean(PM2.5_base11, na.rm=TRUE)
+desvp_11= sd(PM2.5_base11, na.rm=TRUE)
+limsup_11= abs(media_11+desvp_11)
+liminf_11= abs(media_11-desvp_11)
+
+
+#Apenas base_12
+PM2.5_base12=base12$PM2.5
+
+media_12= mean(PM2.5_base12, na.rm=TRUE)
+desvp_12= sd(PM2.5_base12, na.rm=TRUE)
+limsup_12= abs(media_12+desvp_12)
+liminf_12= abs(media_12-desvp_12)
+
+
+#Qual base polui mais de acordo com o PM2.5?
+limitessup=data.frame(nomes=c("Aotizhongxin",
+                              "Changping",
+                              "Dingling",
+                              "Dongsi",
+                              "Guanyuan",
+                              "Gucheng",
+                              "Huairou",
+                              "Nongzhanguan",
+                              "Shunyi",
+                              "Tiantan",
+                              "Wanliu",
+                              "Wanshouxigong",
+                              "TODAS"),
+                      lim=c(limsup_1,limsup_2,limsup_3,
+                            limsup_4,limsup_5,limsup_6,
+                            limsup_7,limsup_8,limsup_9,
+                            limsup_10,limsup_11,limsup_12,limsup)
+)
+
+#Gráfico da base que polui mais em PM2.5
+ggplot(limitessup, aes(reorder(nomes,lim),lim))+
+  geom_col()+
+  coord_flip()+
+  ggtitle("Maiores poluentes de acordo com PM2.5")
+
+#A base que mais foge do limite de confiança é a de Dongsi com relação ao PM2.5  
+
+#Lista com bases com limite superior acima do limite superior total:
+Fator_1=data.frame(subset(limitessup, lim>limsup))
+
+#Excluir dados que já não precisa mais:
+rm(PM2.5, PM2.5_base1,PM2.5_base2,PM2.5_base3,PM2.5_base4,PM2.5_base5,PM2.5_base6,PM2.5_base7,PM2.5_base8,
+   PM2.5_base9,PM2.5_base10,PM2.5_base11,PM2.5_base12, 
+   desvp,desvp_1,desvp_2,desvp_3,desvp_4,desvp_5,desvp_6,desvp_7,desvp_8,desvp_9,
+   desvp_10,desvp_11,desvp_12,
+   liminf,liminf_1,liminf_2,liminf_3,liminf_4,liminf_5,liminf_6,liminf_7,liminf_8,liminf_9,
+   liminf_10,liminf_11,liminf_12,
+   limsup,limsup_1,limsup_2,limsup_3,limsup_4,limsup_5,limsup_6,limsup_7,limsup_8,limsup_9,
+   limsup_10,limsup_11,limsup_12,
+   media,media_1,media_2,media_3,media_4,media_5,media_6,media_7,media_8,media_9,
+   media_10,media_11,media_12)
+
+#//////////////////////////////////////PM10///////////////////////////////////
+#Criar uma nova base só com a variável a ser explorada #PM10
+bases=c(base1$PM10,
+        base2$PM10,
+        base3$PM10,
+        base4$PM10,
+        base5$PM10,
+        base6$PM10,
+        base7$PM10,
+        base8$PM10,
+        base9$PM10,
+        base10$PM10,
+        base11$PM10,
+        base12$PM10)
+
+
+#Criar uma nova base com os nomes das estações
+realname = data.frame(stations=c(replicate("Aotizhongxin",n=35064),
+                                 replicate("Changping",n=35064),
+                                 replicate("Dingling",n=35064),
+                                 replicate("Dongsi",n=35064),
+                                 replicate("Guanyuan",n=35064),
+                                 replicate("Gucheng", n=35064),
+                                 replicate("Huairou", n=35064),
+                                 replicate("Nongzhanguan",n=35064),
+                                 replicate("Shunyi",n=35064),
+                                 replicate("Tiantan",n=35064),
+                                 replicate("Wanliu",n=35064),
+                                 replicate("Wanshouxigong", n=35064)))
+
+#Transforma a base em data.frame
+bases=data.frame(bases)
+
+
+#Juntar os dados com os nomes.
+nova_base=cbind(bases,realname)
+
+#Excluir as bases que já não precisa mais
+rm(realname)
+rm(bases)
+
+#Análise de dispersão:
+#Todas as bases
+PM10=nova_base$bases
+
+media= mean(PM10, na.rm=TRUE)
+desvp= sd(PM10, na.rm=TRUE)
+limsup= abs(media+desvp)
+liminf= abs(media-desvp)
+
+
+#Apenas base_1
+PM10_base1=base1$PM10
+
+media_1= mean(PM10_base1, na.rm=TRUE)
+desvp_1= sd(PM10_base1, na.rm=TRUE)
+limsup_1= abs(media_1+desvp_1)
+liminf_1= abs(media_1-desvp_1)
+
+
+#Apenas base_2
+PM10_base2=base2$PM10
+
+media_2= mean(PM10_base2, na.rm=TRUE)
+desvp_2= sd(PM10_base2, na.rm=TRUE)
+limsup_2= abs(media_2+desvp_2)
+liminf_2= abs(media_2-desvp_2)
+
+#Apenas base_3
+PM10_base3=base3$PM10
+
+media_3= mean(PM10_base3, na.rm=TRUE)
+desvp_3= sd(PM10_base3, na.rm=TRUE)
+limsup_3= abs(media_3+desvp_3)
+liminf_3= abs(media_3-desvp_3)
+
+
+#Apenas base_4
+PM10_base4=base4$PM10
+
+media_4= mean(PM10_base4, na.rm=TRUE)
+desvp_4= sd(PM10_base4, na.rm=TRUE)
+limsup_4= abs(media_4+desvp_4)
+liminf_4= abs(media_4-desvp_4)
+
+
+#Apenas base_5
+PM10_base5=base5$PM10
+
+media_5= mean(PM10_base5, na.rm=TRUE)
+desvp_5= sd(PM10_base5, na.rm=TRUE)
+limsup_5= abs(media_5+desvp_5)
+liminf_5= abs(media_5-desvp_5)
+
+
+#Apenas base_6
+PM10_base6=base6$PM10
+
+media_6= mean(PM10_base6, na.rm=TRUE)
+desvp_6= sd(PM10_base6, na.rm=TRUE)
+limsup_6= abs(media_6+desvp_6)
+liminf_6= abs(media_6-desvp_6)
+
+
+#Apenas base_7
+PM10_base7=base7$PM10
+
+media_7= mean(PM10_base7, na.rm=TRUE)
+desvp_7= sd(PM10_base7, na.rm=TRUE)
+limsup_7= abs(media_7+desvp_7)
+liminf_7= abs(media_7-desvp_7)
+
+
+#Apenas base_8
+PM10_base8=base8$PM10
+
+media_8= mean(PM10_base8, na.rm=TRUE)
+desvp_8= sd(PM10_base8, na.rm=TRUE)
+limsup_8= abs(media_8+desvp_8)
+liminf_8= abs(media_8-desvp_8)
+
+
+#Apenas base_9
+PM10_base9=base9$PM10
+
+media_9= mean(PM10_base9, na.rm=TRUE)
+desvp_9= sd(PM10_base9, na.rm=TRUE)
+limsup_9= abs(media_9+desvp_9)
+liminf_5= abs(media_9-desvp_9)
+
+
+#Apenas base_10
+PM10_base10=base10$PM10
+
+media_10= mean(PM10_base10, na.rm=TRUE)
+desvp_10= sd(PM10_base10, na.rm=TRUE)
+limsup_10= abs(media_10+desvp_10)
+liminf_10= abs(media_10-desvp_10)
+
+
+#Apenas base_11
+PM10_base11=base11$PM10
+
+media_11= mean(PM10_base11, na.rm=TRUE)
+desvp_11= sd(PM10_base11, na.rm=TRUE)
+limsup_11= abs(media_11+desvp_11)
+liminf_11= abs(media_11-desvp_11)
+
+
+#Apenas base_12
+PM10_base12=base12$PM10
+
+media_12= mean(PM10_base12, na.rm=TRUE)
+desvp_12= sd(PM10_base12, na.rm=TRUE)
+limsup_12= abs(media_12+desvp_12)
+liminf_12= abs(media_12-desvp_12)
+
+
+#Qual base polui mais de acordo com o PM10?
+limitessup=data.frame(nomes=c("Aotizhongxin",
+                              "Changping",
+                              "Dingling",
+                              "Dongsi",
+                              "Guanyuan",
+                              "Gucheng",
+                              "Huairou",
+                              "Nongzhanguan",
+                              "Shunyi",
+                              "Tiantan",
+                              "Wanliu",
+                              "Wanshouxigong",
+                              "TODAS"),
+                      lim=c(limsup_1,limsup_2,limsup_3,
+                            limsup_4,limsup_5,limsup_6,
+                            limsup_7,limsup_8,limsup_9,
+                            limsup_10,limsup_11,limsup_12,limsup)
+)
+
+#Gráfico da base que polui mais em PM10
+ggplot(limitessup, aes(reorder(nomes,lim),lim))+
+  geom_col()+
+  coord_flip()+
+  ggtitle("Maiores poluentes de acordo com PM10")
+
+#A base que mais foge do limite de confiança é a de Gucheng com relação ao PM10  
+
+#Lista com bases com limite superior acima do limite superior total:
+Fator_2=data.frame(subset(limitessup, lim>limsup))
+
+#Excluir dados que já não precisa mais:
+rm(PM10, PM10_base1,PM10_base2,PM10_base3,PM10_base4,PM10_base5,PM10_base6,PM10_base7,PM10_base8,
+   PM10_base9,PM10_base10,PM10_base11,PM10_base12, 
+   desvp,desvp_1,desvp_2,desvp_3,desvp_4,desvp_5,desvp_6,desvp_7,desvp_8,desvp_9,
+   desvp_10,desvp_11,desvp_12,
+   liminf,liminf_1,liminf_2,liminf_3,liminf_4,liminf_5,liminf_6,liminf_7,liminf_8,liminf_9,
+   liminf_10,liminf_11,liminf_12,
+   limsup,limsup_1,limsup_2,limsup_3,limsup_4,limsup_5,limsup_6,limsup_7,limsup_8,limsup_9,
+   limsup_10,limsup_11,limsup_12,
+   media,media_1,media_2,media_3,media_4,media_5,media_6,media_7,media_8,media_9,
+   media_10,media_11,media_12)
+
+#//////////////////////////////////////SO2///////////////////////////////////
+#Criar uma nova base só com a variável a ser explorada #SO2
+bases=c(base1$SO2,
+        base2$SO2,
+        base3$SO2,
+        base4$SO2,
+        base5$SO2,
+        base6$SO2,
+        base7$SO2,
+        base8$SO2,
+        base9$SO2,
+        base10$SO2,
+        base11$SO2,
+        base12$SO2)
+
+
+#Criar uma nova base com os nomes das estações
+realname = data.frame(stations=c(replicate("Aotizhongxin",n=35064),
+                                 replicate("Changping",n=35064),
+                                 replicate("Dingling",n=35064),
+                                 replicate("Dongsi",n=35064),
+                                 replicate("Guanyuan",n=35064),
+                                 replicate("Gucheng", n=35064),
+                                 replicate("Huairou", n=35064),
+                                 replicate("Nongzhanguan",n=35064),
+                                 replicate("Shunyi",n=35064),
+                                 replicate("Tiantan",n=35064),
+                                 replicate("Wanliu",n=35064),
+                                 replicate("Wanshouxigong", n=35064)))
+
+#Transforma a base em data.frame
+bases=data.frame(bases)
+
+
+#Juntar os dados com os nomes.
+nova_base=cbind(bases,realname)
+
+#Excluir as bases que já não precisa mais
+rm(realname)
+rm(bases)
+
+#Análise de dispersão:
+#Todas as bases
+SO2=nova_base$bases
+
+media= mean(SO2, na.rm=TRUE)
+desvp= sd(SO2, na.rm=TRUE)
+limsup= abs(media+desvp)
+liminf= abs(media-desvp)
+
+
+#Apenas base_1
+SO2_base1=base1$SO2
+
+media_1= mean(SO2_base1, na.rm=TRUE)
+desvp_1= sd(SO2_base1, na.rm=TRUE)
+limsup_1= abs(media_1+desvp_1)
+liminf_1= abs(media_1-desvp_1)
+
+
+#Apenas base_2
+SO2_base2=base2$SO2
+
+media_2= mean(SO2_base2, na.rm=TRUE)
+desvp_2= sd(SO2_base2, na.rm=TRUE)
+limsup_2= abs(media_2+desvp_2)
+liminf_2= abs(media_2-desvp_2)
+
+#Apenas base_3
+SO2_base3=base3$SO2
+
+media_3= mean(SO2_base3, na.rm=TRUE)
+desvp_3= sd(SO2_base3, na.rm=TRUE)
+limsup_3= abs(media_3+desvp_3)
+liminf_3= abs(media_3-desvp_3)
+
+
+#Apenas base_4
+SO2_base4=base4$SO2
+
+media_4= mean(SO2_base4, na.rm=TRUE)
+desvp_4= sd(SO2_base4, na.rm=TRUE)
+limsup_4= abs(media_4+desvp_4)
+liminf_4= abs(media_4-desvp_4)
+
+
+#Apenas base_5
+SO2_base5=base5$SO2
+
+media_5= mean(SO2_base5, na.rm=TRUE)
+desvp_5= sd(SO2_base5, na.rm=TRUE)
+limsup_5= abs(media_5+desvp_5)
+liminf_5= abs(media_5-desvp_5)
+
+
+#Apenas base_6
+SO2_base6=base6$SO2
+
+media_6= mean(SO2_base6, na.rm=TRUE)
+desvp_6= sd(SO2_base6, na.rm=TRUE)
+limsup_6= abs(media_6+desvp_6)
+liminf_6= abs(media_6-desvp_6)
+
+
+#Apenas base_7
+SO2_base7=base7$SO2
+
+media_7= mean(SO2_base7, na.rm=TRUE)
+desvp_7= sd(SO2_base7, na.rm=TRUE)
+limsup_7= abs(media_7+desvp_7)
+liminf_7= abs(media_7-desvp_7)
+
+
+#Apenas base_8
+SO2_base8=base8$SO2
+
+media_8= mean(SO2_base8, na.rm=TRUE)
+desvp_8= sd(SO2_base8, na.rm=TRUE)
+limsup_8= abs(media_8+desvp_8)
+liminf_8= abs(media_8-desvp_8)
+
+
+#Apenas base_9
+SO2_base9=base9$SO2
+
+media_9= mean(SO2_base9, na.rm=TRUE)
+desvp_9= sd(SO2_base9, na.rm=TRUE)
+limsup_9= abs(media_9+desvp_9)
+liminf_5= abs(media_9-desvp_9)
+
+
+#Apenas base_10
+SO2_base10=base10$SO2
+
+media_10= mean(SO2_base10, na.rm=TRUE)
+desvp_10= sd(SO2_base10, na.rm=TRUE)
+limsup_10= abs(media_10+desvp_10)
+liminf_10= abs(media_10-desvp_10)
+
+
+#Apenas base_11
+SO2_base11=base11$SO2
+
+media_11= mean(SO2_base11, na.rm=TRUE)
+desvp_11= sd(SO2_base11, na.rm=TRUE)
+limsup_11= abs(media_11+desvp_11)
+liminf_11= abs(media_11-desvp_11)
+
+
+#Apenas base_12
+SO2_base12=base12$SO2
+
+media_12= mean(SO2_base12, na.rm=TRUE)
+desvp_12= sd(SO2_base12, na.rm=TRUE)
+limsup_12= abs(media_12+desvp_12)
+liminf_12= abs(media_12-desvp_12)
+
+
+#Qual base polui mais de acordo com o SO2?
+limitessup=data.frame(nomes=c("Aotizhongxin",
+                              "Changping",
+                              "Dingling",
+                              "Dongsi",
+                              "Guanyuan",
+                              "Gucheng",
+                              "Huairou",
+                              "Nongzhanguan",
+                              "Shunyi",
+                              "Tiantan",
+                              "Wanliu",
+                              "Wanshouxigong",
+                              "TODAS"),
+                      lim=c(limsup_1,limsup_2,limsup_3,
+                            limsup_4,limsup_5,limsup_6,
+                            limsup_7,limsup_8,limsup_9,
+                            limsup_10,limsup_11,limsup_12,limsup)
+)
+
+#Gráfico da base que polui mais em SO2
+ggplot(limitessup, aes(reorder(nomes,lim),lim))+
+  geom_col()+
+  coord_flip()+
+  ggtitle("Maiores poluentes de acordo com SO2")
+
+#A base que mais foge do limite de confiança é a de Nongzhanguan com relação ao SO2  
+
+#Lista com bases com limite superior acima do limite superior total:
+Fator_3=data.frame(subset(limitessup, lim>limsup))
+
+#Exluir dados que não importam mais
+rm(SO2, SO2_base1,SO2_base2,SO2_base3,SO2_base4,SO2_base5,SO2_base6,SO2_base7,SO2_base8,
+   SO2_base9,SO2_base10,SO2_base11,SO2_base12, 
+   desvp,desvp_1,desvp_2,desvp_3,desvp_4,desvp_5,desvp_6,desvp_7,desvp_8,desvp_9,
+   desvp_10,desvp_11,desvp_12,
+   liminf,liminf_1,liminf_2,liminf_3,liminf_4,liminf_5,liminf_6,liminf_7,liminf_8,liminf_9,
+   liminf_10,liminf_11,liminf_12,
+   limsup,limsup_1,limsup_2,limsup_3,limsup_4,limsup_5,limsup_6,limsup_7,limsup_8,limsup_9,
+   limsup_10,limsup_11,limsup_12,
+   media,media_1,media_2,media_3,media_4,media_5,media_6,media_7,media_8,media_9,
+   media_10,media_11,media_12)
+
+#//////////////////////////////////////NO2///////////////////////////////////
+#Criar uma nova base só com a variável a ser explorada #NO2
+bases=c(base1$NO2,
+        base2$NO2,
+        base3$NO2,
+        base4$NO2,
+        base5$NO2,
+        base6$NO2,
+        base7$NO2,
+        base8$NO2,
+        base9$NO2,
+        base10$NO2,
+        base11$NO2,
+        base12$NO2)
+
+
+#Criar uma nova base com os nomes das estações
+realname = data.frame(stations=c(replicate("Aotizhongxin",n=35064),
+                                 replicate("Changping",n=35064),
+                                 replicate("Dingling",n=35064),
+                                 replicate("Dongsi",n=35064),
+                                 replicate("Guanyuan",n=35064),
+                                 replicate("Gucheng", n=35064),
+                                 replicate("Huairou", n=35064),
+                                 replicate("Nongzhanguan",n=35064),
+                                 replicate("Shunyi",n=35064),
+                                 replicate("Tiantan",n=35064),
+                                 replicate("Wanliu",n=35064),
+                                 replicate("Wanshouxigong", n=35064)))
+
+#Transforma a base em data.frame
+bases=data.frame(bases)
+
+
+#Juntar os dados com os nomes.
+nova_base=cbind(bases,realname)
+
+#Excluir as bases que já não precisa mais
+rm(realname)
+rm(bases)
+
+#Análise de dispersão:
+#Todas as bases
+NO2=nova_base$bases
+
+media= mean(NO2, na.rm=TRUE)
+desvp= sd(NO2, na.rm=TRUE)
+limsup= abs(media+desvp)
+liminf= abs(media-desvp)
+
+
+#Apenas base_1
+NO2_base1=base1$NO2
+
+media_1= mean(NO2_base1, na.rm=TRUE)
+desvp_1= sd(NO2_base1, na.rm=TRUE)
+limsup_1= abs(media_1+desvp_1)
+liminf_1= abs(media_1-desvp_1)
+
+
+#Apenas base_2
+NO2_base2=base2$NO2
+
+media_2= mean(NO2_base2, na.rm=TRUE)
+desvp_2= sd(NO2_base2, na.rm=TRUE)
+limsup_2= abs(media_2+desvp_2)
+liminf_2= abs(media_2-desvp_2)
+
+#Apenas base_3
+NO2_base3=base3$NO2
+
+media_3= mean(NO2_base3, na.rm=TRUE)
+desvp_3= sd(NO2_base3, na.rm=TRUE)
+limsup_3= abs(media_3+desvp_3)
+liminf_3= abs(media_3-desvp_3)
+
+
+#Apenas base_4
+NO2_base4=base4$NO2
+
+media_4= mean(NO2_base4, na.rm=TRUE)
+desvp_4= sd(NO2_base4, na.rm=TRUE)
+limsup_4= abs(media_4+desvp_4)
+liminf_4= abs(media_4-desvp_4)
+
+
+#Apenas base_5
+NO2_base5=base5$NO2
+
+media_5= mean(NO2_base5, na.rm=TRUE)
+desvp_5= sd(NO2_base5, na.rm=TRUE)
+limsup_5= abs(media_5+desvp_5)
+liminf_5= abs(media_5-desvp_5)
+
+
+#Apenas base_6
+NO2_base6=base6$NO2
+
+media_6= mean(NO2_base6, na.rm=TRUE)
+desvp_6= sd(NO2_base6, na.rm=TRUE)
+limsup_6= abs(media_6+desvp_6)
+liminf_6= abs(media_6-desvp_6)
+
+
+#Apenas base_7
+NO2_base7=base7$NO2
+
+media_7= mean(NO2_base7, na.rm=TRUE)
+desvp_7= sd(NO2_base7, na.rm=TRUE)
+limsup_7= abs(media_7+desvp_7)
+liminf_7= abs(media_7-desvp_7)
+
+
+#Apenas base_8
+NO2_base8=base8$NO2
+
+media_8= mean(NO2_base8, na.rm=TRUE)
+desvp_8= sd(NO2_base8, na.rm=TRUE)
+limsup_8= abs(media_8+desvp_8)
+liminf_8= abs(media_8-desvp_8)
+
+
+#Apenas base_9
+NO2_base9=base9$NO2
+
+media_9= mean(NO2_base9, na.rm=TRUE)
+desvp_9= sd(NO2_base9, na.rm=TRUE)
+limsup_9= abs(media_9+desvp_9)
+liminf_5= abs(media_9-desvp_9)
+
+
+#Apenas base_10
+NO2_base10=base10$NO2
+
+media_10= mean(NO2_base10, na.rm=TRUE)
+desvp_10= sd(NO2_base10, na.rm=TRUE)
+limsup_10= abs(media_10+desvp_10)
+liminf_10= abs(media_10-desvp_10)
+
+
+#Apenas base_11
+NO2_base11=base11$NO2
+
+media_11= mean(NO2_base11, na.rm=TRUE)
+desvp_11= sd(NO2_base11, na.rm=TRUE)
+limsup_11= abs(media_11+desvp_11)
+liminf_11= abs(media_11-desvp_11)
+
+
+#Apenas base_12
+NO2_base12=base12$NO2
+
+media_12= mean(NO2_base12, na.rm=TRUE)
+desvp_12= sd(NO2_base12, na.rm=TRUE)
+limsup_12= abs(media_12+desvp_12)
+liminf_12= abs(media_12-desvp_12)
+
+
+#Qual base polui mais de acordo com o NO2?
+limitessup=data.frame(nomes=c("Aotizhongxin",
+                              "Changping",
+                              "Dingling",
+                              "Dongsi",
+                              "Guanyuan",
+                              "Gucheng",
+                              "Huairou",
+                              "Nongzhanguan",
+                              "Shunyi",
+                              "Tiantan",
+                              "Wanliu",
+                              "Wanshouxigong",
+                              "TODAS"),
+                      lim=c(limsup_1,limsup_2,limsup_3,
+                            limsup_4,limsup_5,limsup_6,
+                            limsup_7,limsup_8,limsup_9,
+                            limsup_10,limsup_11,limsup_12,limsup)
+)
+
+#Gráfico da base que polui mais em NO2
+ggplot(limitessup, aes(reorder(nomes,lim),lim))+
+  geom_col()+
+  coord_flip()+
+  ggtitle("Maiores poluentes de acordo com NO2")
+
+#A base que mais foge do limite de confiança é a de Wanliu com relação ao NO2
+
+#Lista com bases com limite superior acima do limite superior total:
+Fator_4=data.frame(subset(limitessup, lim>limsup))
+
+#Exluir dados que não importam mais
+rm(NO2, NO2_base1,NO2_base2,NO2_base3,NO2_base4,NO2_base5,NO2_base6,NO2_base7,NO2_base8,
+   NO2_base9,NO2_base10,NO2_base11,NO2_base12, 
+   desvp,desvp_1,desvp_2,desvp_3,desvp_4,desvp_5,desvp_6,desvp_7,desvp_8,desvp_9,
+   desvp_10,desvp_11,desvp_12,
+   liminf,liminf_1,liminf_2,liminf_3,liminf_4,liminf_5,liminf_6,liminf_7,liminf_8,liminf_9,
+   liminf_10,liminf_11,liminf_12,
+   limsup,limsup_1,limsup_2,limsup_3,limsup_4,limsup_5,limsup_6,limsup_7,limsup_8,limsup_9,
+   limsup_10,limsup_11,limsup_12,
+   media,media_1,media_2,media_3,media_4,media_5,media_6,media_7,media_8,media_9,
+   media_10,media_11,media_12)
+
+#//////////////////////////////////////CO///////////////////////////////////
+#Criar uma nova base só com a variável a ser explorada #CO
+bases=c(base1$CO,
+        base2$CO,
+        base3$CO,
+        base4$CO,
+        base5$CO,
+        base6$CO,
+        base7$CO,
+        base8$CO,
+        base9$CO,
+        base10$CO,
+        base11$CO,
+        base12$CO)
+
+
+#Criar uma nova base com os nomes das estações
+realname = data.frame(stations=c(replicate("Aotizhongxin",n=35064),
+                                 replicate("Changping",n=35064),
+                                 replicate("Dingling",n=35064),
+                                 replicate("Dongsi",n=35064),
+                                 replicate("Guanyuan",n=35064),
+                                 replicate("Gucheng", n=35064),
+                                 replicate("Huairou", n=35064),
+                                 replicate("Nongzhanguan",n=35064),
+                                 replicate("Shunyi",n=35064),
+                                 replicate("Tiantan",n=35064),
+                                 replicate("Wanliu",n=35064),
+                                 replicate("Wanshouxigong", n=35064)))
+
+#Transforma a base em data.frame
+bases=data.frame(bases)
+
+
+#Juntar os dados com os nomes.
+nova_base=cbind(bases,realname)
+
+#Excluir as bases que já não precisa mais
+rm(realname)
+rm(bases)
+
+#Análise de dispersão:
+#Todas as bases
+CO=nova_base$bases
+
+media= mean(CO, na.rm=TRUE)
+desvp= sd(CO, na.rm=TRUE)
+limsup= abs(media+desvp)
+liminf= abs(media-desvp)
+
+
+#Apenas base_1
+CO_base1=base1$CO
+
+media_1= mean(CO_base1, na.rm=TRUE)
+desvp_1= sd(CO_base1, na.rm=TRUE)
+limsup_1= abs(media_1+desvp_1)
+liminf_1= abs(media_1-desvp_1)
+
+
+#Apenas base_2
+CO_base2=base2$CO
+
+media_2= mean(CO_base2, na.rm=TRUE)
+desvp_2= sd(CO_base2, na.rm=TRUE)
+limsup_2= abs(media_2+desvp_2)
+liminf_2= abs(media_2-desvp_2)
+
+#Apenas base_3
+CO_base3=base3$CO
+
+media_3= mean(CO_base3, na.rm=TRUE)
+desvp_3= sd(CO_base3, na.rm=TRUE)
+limsup_3= abs(media_3+desvp_3)
+liminf_3= abs(media_3-desvp_3)
+
+
+#Apenas base_4
+CO_base4=base4$CO
+
+media_4= mean(CO_base4, na.rm=TRUE)
+desvp_4= sd(CO_base4, na.rm=TRUE)
+limsup_4= abs(media_4+desvp_4)
+liminf_4= abs(media_4-desvp_4)
+
+
+#Apenas base_5
+CO_base5=base5$CO
+
+media_5= mean(CO_base5, na.rm=TRUE)
+desvp_5= sd(CO_base5, na.rm=TRUE)
+limsup_5= abs(media_5+desvp_5)
+liminf_5= abs(media_5-desvp_5)
+
+
+#Apenas base_6
+CO_base6=base6$CO
+
+media_6= mean(CO_base6, na.rm=TRUE)
+desvp_6= sd(CO_base6, na.rm=TRUE)
+limsup_6= abs(media_6+desvp_6)
+liminf_6= abs(media_6-desvp_6)
+
+
+#Apenas base_7
+CO_base7=base7$CO
+
+media_7= mean(CO_base7, na.rm=TRUE)
+desvp_7= sd(CO_base7, na.rm=TRUE)
+limsup_7= abs(media_7+desvp_7)
+liminf_7= abs(media_7-desvp_7)
+
+
+#Apenas base_8
+CO_base8=base8$CO
+
+media_8= mean(CO_base8, na.rm=TRUE)
+desvp_8= sd(CO_base8, na.rm=TRUE)
+limsup_8= abs(media_8+desvp_8)
+liminf_8= abs(media_8-desvp_8)
+
+
+#Apenas base_9
+CO_base9=base9$CO
+
+media_9= mean(CO_base9, na.rm=TRUE)
+desvp_9= sd(CO_base9, na.rm=TRUE)
+limsup_9= abs(media_9+desvp_9)
+liminf_5= abs(media_9-desvp_9)
+
+
+#Apenas base_10
+CO_base10=base10$CO
+
+media_10= mean(CO_base10, na.rm=TRUE)
+desvp_10= sd(CO_base10, na.rm=TRUE)
+limsup_10= abs(media_10+desvp_10)
+liminf_10= abs(media_10-desvp_10)
+
+
+#Apenas base_11
+CO_base11=base11$CO
+
+media_11= mean(CO_base11, na.rm=TRUE)
+desvp_11= sd(CO_base11, na.rm=TRUE)
+limsup_11= abs(media_11+desvp_11)
+liminf_11= abs(media_11-desvp_11)
+
+
+#Apenas base_12
+CO_base12=base12$CO
+
+media_12= mean(CO_base12, na.rm=TRUE)
+desvp_12= sd(CO_base12, na.rm=TRUE)
+limsup_12= abs(media_12+desvp_12)
+liminf_12= abs(media_12-desvp_12)
+
+
+#Qual base polui mais de acordo com o CO?
+limitessup=data.frame(nomes=c("Aotizhongxin",
+                              "Changping",
+                              "Dingling",
+                              "Dongsi",
+                              "Guanyuan",
+                              "Gucheng",
+                              "Huairou",
+                              "Nongzhanguan",
+                              "Shunyi",
+                              "Tiantan",
+                              "Wanliu",
+                              "Wanshouxigong",
+                              "TODAS"),
+                      lim=c(limsup_1,limsup_2,limsup_3,
+                            limsup_4,limsup_5,limsup_6,
+                            limsup_7,limsup_8,limsup_9,
+                            limsup_10,limsup_11,limsup_12,limsup)
+)
+
+#Gráfico da base que polui mais em CO
+ggplot(limitessup, aes(reorder(nomes,lim),lim))+
+  geom_col()+
+  coord_flip()+
+  ggtitle("Maiores poluentes de acordo com CO")
+
+#A base que mais foge do limite de confiança é a de Wanshouxigong com relação ao CO
+
+#Lista com bases com limite superior acima do limite superior total:
+Fator_5=data.frame(subset(limitessup, lim>limsup))
+
+#Exluir dados que não importam mais
+rm(CO, CO_base1,CO_base2,CO_base3,CO_base4,CO_base5,CO_base6,CO_base7,CO_base8,
+   CO_base9,CO_base10,CO_base11,CO_base12, 
+   desvp,desvp_1,desvp_2,desvp_3,desvp_4,desvp_5,desvp_6,desvp_7,desvp_8,desvp_9,
+   desvp_10,desvp_11,desvp_12,
+   liminf,liminf_1,liminf_2,liminf_3,liminf_4,liminf_5,liminf_6,liminf_7,liminf_8,liminf_9,
+   liminf_10,liminf_11,liminf_12,
+   limsup,limsup_1,limsup_2,limsup_3,limsup_4,limsup_5,limsup_6,limsup_7,limsup_8,limsup_9,
+   limsup_10,limsup_11,limsup_12,
+   media,media_1,media_2,media_3,media_4,media_5,media_6,media_7,media_8,media_9,
+   media_10,media_11,media_12)
+
+#//////////////////////////////////////O3///////////////////////////////////
+#Criar uma nova base só O3m a variável a ser explorada #O3
+bases=c(base1$O3,
+        base2$O3,
+        base3$O3,
+        base4$O3,
+        base5$O3,
+        base6$O3,
+        base7$O3,
+        base8$O3,
+        base9$O3,
+        base10$O3,
+        base11$O3,
+        base12$O3)
+
+
+#Criar uma nova base com os nomes das estações
+realname = data.frame(stations=c(replicate("Aotizhongxin",n=35064),
+                                 replicate("Changping",n=35064),
+                                 replicate("Dingling",n=35064),
+                                 replicate("Dongsi",n=35064),
+                                 replicate("Guanyuan",n=35064),
+                                 replicate("Gucheng", n=35064),
+                                 replicate("Huairou", n=35064),
+                                 replicate("Nongzhanguan",n=35064),
+                                 replicate("Shunyi",n=35064),
+                                 replicate("Tiantan",n=35064),
+                                 replicate("Wanliu",n=35064),
+                                 replicate("Wanshouxigong", n=35064)))
+
+#Transforma a base em data.frame
+bases=data.frame(bases)
+
+
+#Juntar os dados com os nomes.
+nova_base=cbind(bases,realname)
+
+#Excluir as bases que já não precisa mais
+rm(realname)
+rm(bases)
+
+#Análise de dispersão:
+#Todas as bases
+O3=nova_base$bases
+
+media= mean(O3, na.rm=TRUE)
+desvp= sd(O3, na.rm=TRUE)
+limsup= abs(media+desvp)
+liminf= abs(media-desvp)
+
+
+#Apenas base_1
+O3_base1=base1$O3
+
+media_1= mean(O3_base1, na.rm=TRUE)
+desvp_1= sd(O3_base1, na.rm=TRUE)
+limsup_1= abs(media_1+desvp_1)
+liminf_1= abs(media_1-desvp_1)
+
+
+#Apenas base_2
+O3_base2=base2$O3
+
+media_2= mean(O3_base2, na.rm=TRUE)
+desvp_2= sd(O3_base2, na.rm=TRUE)
+limsup_2= abs(media_2+desvp_2)
+liminf_2= abs(media_2-desvp_2)
+
+#Apenas base_3
+O3_base3=base3$O3
+
+media_3= mean(O3_base3, na.rm=TRUE)
+desvp_3= sd(O3_base3, na.rm=TRUE)
+limsup_3= abs(media_3+desvp_3)
+liminf_3= abs(media_3-desvp_3)
+
+
+#Apenas base_4
+O3_base4=base4$O3
+
+media_4= mean(O3_base4, na.rm=TRUE)
+desvp_4= sd(O3_base4, na.rm=TRUE)
+limsup_4= abs(media_4+desvp_4)
+liminf_4= abs(media_4-desvp_4)
+
+
+#Apenas base_5
+O3_base5=base5$O3
+
+media_5= mean(O3_base5, na.rm=TRUE)
+desvp_5= sd(O3_base5, na.rm=TRUE)
+limsup_5= abs(media_5+desvp_5)
+liminf_5= abs(media_5-desvp_5)
+
+
+#Apenas base_6
+O3_base6=base6$O3
+
+media_6= mean(O3_base6, na.rm=TRUE)
+desvp_6= sd(O3_base6, na.rm=TRUE)
+limsup_6= abs(media_6+desvp_6)
+liminf_6= abs(media_6-desvp_6)
+
+
+#Apenas base_7
+O3_base7=base7$O3
+
+media_7= mean(O3_base7, na.rm=TRUE)
+desvp_7= sd(O3_base7, na.rm=TRUE)
+limsup_7= abs(media_7+desvp_7)
+liminf_7= abs(media_7-desvp_7)
+
+
+#Apenas base_8
+O3_base8=base8$O3
+
+media_8= mean(O3_base8, na.rm=TRUE)
+desvp_8= sd(O3_base8, na.rm=TRUE)
+limsup_8= abs(media_8+desvp_8)
+liminf_8= abs(media_8-desvp_8)
+
+
+#Apenas base_9
+O3_base9=base9$O3
+
+media_9= mean(O3_base9, na.rm=TRUE)
+desvp_9= sd(O3_base9, na.rm=TRUE)
+limsup_9= abs(media_9+desvp_9)
+liminf_9= abs(media_9-desvp_9)
+
+
+#Apenas base_10
+O3_base10=base10$O3
+
+media_10= mean(O3_base10, na.rm=TRUE)
+desvp_10= sd(O3_base10, na.rm=TRUE)
+limsup_10= abs(media_10+desvp_10)
+liminf_10= abs(media_10-desvp_10)
+
+
+#Apenas base_11
+O3_base11=base11$O3
+
+media_11= mean(O3_base11, na.rm=TRUE)
+desvp_11= sd(O3_base11, na.rm=TRUE)
+limsup_11= abs(media_11+desvp_11)
+liminf_11= abs(media_11-desvp_11)
+
+
+#Apenas base_12
+O3_base12=base12$O3
+
+media_12= mean(O3_base12, na.rm=TRUE)
+desvp_12= sd(O3_base12, na.rm=TRUE)
+limsup_12= abs(media_12+desvp_12)
+liminf_12= abs(media_12-desvp_12)
+
+
+#Qual base polui mais de acordo com o O3?
+limitessup=data.frame(nomes=c("Aotizhongxin",
+                              "Changping",
+                              "Dingling",
+                              "Dongsi",
+                              "Guanyuan",
+                              "Gucheng",
+                              "Huairou",
+                              "Nongzhanguan",
+                              "Shunyi",
+                              "Tiantan",
+                              "Wanliu",
+                              "Wanshouxigong",
+                              "TODAS"),
+                      lim=c(limsup_1,limsup_2,limsup_3,
+                            limsup_4,limsup_5,limsup_6,
+                            limsup_7,limsup_8,limsup_9,
+                            limsup_10,limsup_11,limsup_12,limsup)
+)
+
+#Gráfico da base que polui mais em O3
+ggplot(limitessup, aes(reorder(nomes,lim),lim))+
+  geom_col()+
+  coord_flip()+
+  ggtitle("Maiores poluentes de acordo com O3")
+
+#A base que mais foge do limite de confiança é a de Dingling com relação ao O3
+
+#Lista com bases com limite superior acima do limite superior total:
+Fator_6=data.frame(subset(limitessup, lim>limsup))
+
+
+#Exluir dados que não importam mais
+rm(O3, O3_base1,O3_base2,O3_base3,O3_base4,O3_base5,O3_base6,O3_base7,O3_base8,
+   O3_base9,O3_base10,O3_base11,O3_base12, 
+   desvp,desvp_1,desvp_2,desvp_3,desvp_4,desvp_5,desvp_6,desvp_7,desvp_8,desvp_9,
+   desvp_10,desvp_11,desvp_12,
+   liminf,liminf_1,liminf_2,liminf_3,liminf_4,liminf_5,liminf_6,liminf_7,liminf_8,liminf_9,
+   liminf_10,liminf_11,liminf_12,
+   limsup,limsup_1,limsup_2,limsup_3,limsup_4,limsup_5,limsup_6,limsup_7,limsup_8,limsup_9,
+   limsup_10,limsup_11,limsup_12,
+   media,media_1,media_2,media_3,media_4,media_5,media_6,media_7,media_8,media_9,
+   media_10,media_11,media_12,base1,base2,base3,base4,base5,base6,base7,base8,base9,base10,base11,base12,
+   nova_base,limitessup)
