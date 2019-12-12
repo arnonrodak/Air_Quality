@@ -1,0 +1,116 @@
+#Autor: Arnon Rodak
+#Data: 29/11/2019
+#Descrição: Ensaio sobre análise textual de tweets.
+
+library(twitteR)
+library(tidytext)
+library(tidyr)
+library(tm)
+library(dplyr)
+library(ggplot2)
+
+#Chaves de acesso do Twitter
+consumer_key <- "nnn"
+consumer_secret <- "nnn"
+access_token <- "nnn"
+access_secret <- "nnn"
+setup_twitter_oauth(consumer_key,consumer_secret,access_token,access_secret)
+
+#Seleção da opção que aparece no console
+2
+
+#Texto procurado no twitter acompanhado de data e número de retornos.
+texto <- searchTwitter('london + knife', 
+                       since = "2019-11-28",
+                       until = "2019-11-29",
+                       lang="en",  
+                       n=4000)
+
+#Retirar Retweets (optei por não retirar os retweets)
+#texto<- strip_retweets(texto)
+
+#Transformar os tweets num data frame pra poder analisar.
+lista_texto <- twListToDF(texto)
+
+#Substituir URL dos textos por nada
+lista_texto$text = gsub("http.*","",lista_texto$text)
+
+#Tokenizar apenas a coluna text
+lista_texto <- lista_texto %>%
+  dplyr::select(text) %>%
+  unnest_tokens(lista_texto, text)
+
+#Limpar o texto de números, pontuações e espaços em branco
+lista_texto$lista_texto <- lista_texto$lista_texto %>%
+  removePunctuation() %>%
+  stripWhitespace () %>%
+  removeNumbers () 
+
+#Determinar diretório
+setwd("C:\\Users\\Arnon\\Desktop")
+
+#Abrir o arquivo de stopwords
+stopwords <- read.csv("stopwords_eng.csv",header=TRUE)
+
+#Mudar header da lista e atribuir ela à outro nome
+nova_lista <- rename(lista_texto, word=lista_texto)
+
+#Retirar stopwords
+nova_lista <- anti_join(nova_lista, stopwords)
+
+#Contar tokens
+tokens_count = nova_lista %>%
+  count(word, sort=TRUE)
+
+#Ajustar stopwords e retirá-las do texto, bem como refazer contagem de tokens
+stopwords <- add_row(stopwords, word="rt")
+stopwords <- add_row(stopwords, word="th")
+stopwords <- add_row(stopwords, word="w")
+stopwords <- add_row(stopwords, word="amp")
+
+nova_lista <- anti_join(nova_lista, stopwords)
+
+tokens_count = nova_lista %>%
+  count(word, sort=TRUE)
+
+#Fazer gráfico do tokens_count
+tokens_count %>%
+  mutate(word, reorder(word,n)) %>%
+  head(5) %>%
+  ggplot(aes(x=word,y=n, fill=factor(word))) +
+  geom_col()+
+  coord_flip()
+
+#Análise de Bigramas
+bigrams <- lista_texto %>%
+  unnest_tokens(bigram, lista_texto, token = "ngrams", n = 2) %>%
+  separate(bigram,c("word1","word2"),sep = " ") %>%
+  filter(!word1 %in% as.vector(t(stopwords$word))) %>%
+  filter(!word2 %in% as.vector(t(stopwords$word))) %>% 
+  unite(bigram,word1,word2,sep = " ") %>%
+  count(bigram, sort = TRUE)
+
+#Fazer gráfico dos bigramas
+bigrams %>%
+  mutate(bigram, reorder(bigram,n)) %>%
+  head(5) %>%
+  ggplot(aes(x=bigram,y=n, fill=factor(bigram))) +
+  geom_col()+
+  coord_flip()
+
+#análise de Trigramas
+trigrams <- lista_texto %>%
+  unnest_tokens(trigrams, lista_texto, token = "ngrams", n = 3) %>%
+  separate(trigrams,c("word1","word2","word3"),sep = " ") %>%
+  filter(!word1 %in% as.vector(t(stopwords$word))) %>%
+  filter(!word3 %in% as.vector(t(stopwords$word))) %>% 
+  unite(trigrams,word1,word2,word3,sep = " ") %>%
+  count(trigrams, sort = TRUE)
+
+#Fazer gráfico dos Trigramas
+trigrams %>%
+  mutate(trigrams, reorder(trigrams,n)) %>%
+  head(5) %>%
+  ggplot(aes(x=trigrams,y=n, fill=factor(trigrams))) +
+  geom_col()+
+  coord_flip()
