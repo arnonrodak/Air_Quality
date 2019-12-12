@@ -1,0 +1,147 @@
+---
+title: "Forecasting"
+author: "Arnon Rodak"
+date: "11/12/2019"
+output: html_document
+---
+
+## Estratégias de forecasting
+
+
+### 1. Holt Exponencial simples
+
+
+#### Para a utilização desta metodologia, foi utilizado o arquivo **pasageiros.csv**, que contém a quantidade de passageiros de um determinado lugar, agrupadas anualmente de *1990* a *2004*.
+
+
+```{r, echo=FALSE}
+
+library(knitr)
+
+#Abrir o arquivo de passageiros:
+passageiros= read.csv("C:\\Users\\Elizabete\\Desktop\\Arnon\\pós data science\\pasageiros.csv",header=TRUE, ";")
+
+kable(passageiros, caption="Valores em milhares")
+
+```
+
+
+```{r, echo=FALSE}
+#Valores de Alpha e Betha:
+alpha=.8
+betha=.2
+```
+#### Para efetuar os devidos cálculos, foram utilizados como premissa do modelo, um coeficiente de suavização de nível $\alpha = `r format(round(alpha,2))`$, e um coeficiente de suavização de tendência $\beta = `r format(round(betha,2))`$. Após a deliberação dos coeficientes, foram calculados os componentes $l$ (componente de nível), e $b$ (componente de tendência).
+
+#### Os componentes possuem as seguintes fórmulas:
+
+##### Componente de nível $l$
+
+$l_0 = y_1$
+
+$l_t = \alpha y_t + (1 - \alpha) (l_{t-1} + b_{t-1})$
+
+
+##### Componente de tendência $b$
+
+$b_0 = y_2 - y_1$
+
+$b_t = \beta (l_t - l_{t-1}) + (1-\beta)b_{t-1}$
+
+
+```{r, echo=FALSE}
+#///////////////////////faz colunas L e B/////////////////////////////////
+
+#Transforma l e b em data.frames
+l=data.frame()
+b=data.frame()
+
+#Completa a primeira linha do l0 e do b0
+l[1,1]=passageiros[2,3]
+b[1,1]=passageiros[3,3]-passageiros[2,3]
+
+#Cria funções para l1 e b1
+prox_l=function(n){((alpha*passageiros[n,3])+((1-alpha)*(l[n-1,1]+b[n-1,1])))}
+
+prox_b=function(n){betha*(l[n,1]-l[n-1,1])+((1-betha)*b[n-1,1])}
+
+
+#Preenche lt e bt
+for(n in 2:16){l=rbind(l,prox_l(n)); b=rbind(b,prox_b(n))}
+
+#Substitui nomes das colunas em l e b
+names(l) = "l"
+names(b) = "b"
+
+#Junta l e b com o data.frame de passageiros
+componentes= cbind(passageiros, l, b)
+
+#Faz a tabela de componentes
+kable(componentes, caption="Valores em milhares")
+
+```
+
+
+#### Utilizando-se da fórmula para calcular os valores projetados de $y$, sendo $y_{t+h} = l_t (hb_t)$ e $h$ igual ao número de períodos futuros, projetou-se o $y$ até *2009*.
+
+
+```{r, echo=FALSE}
+#//////////////////////Faz o yp (y projetado)////////////////////
+
+#Primeira etapa do yp
+n=2:16
+h=replicate(1,n=15)
+yp= l[n,1]+(h*b[n,1])
+
+
+#Segunda etapa do yp
+h=2:6
+yp2=l[16,1]+(h*b[16,1])
+
+#Junta yp com yp2
+yp=c(yp,yp2)
+
+#Transforma yp em data.frame
+yp=data.frame(yp)
+
+#///////////////////////////////////////////////////////////////////
+
+#Criar data.frame que junta yt e yp.
+actual_projected=data.frame(ano=1990:2009, y=c(passageiros[2:16,3],yp2))
+
+#Mostrar o data.frame
+kable(actual_projected, caption="Valores em milhares")
+
+```
+
+
+```{r, echo=FALSE}
+
+#Fazer o gráfico:
+library(ggplot2)
+
+ggplot(actual_projected, aes(x=ano,y=y))+
+  geom_line(colour="darkgoldenrod1",size=2)+
+  ggtitle(label="Passageiros projetados entre 2005-2009")
+
+```
+
+
+```{r, echo=FALSE}
+
+#Junta as colunas de yt que já tinha com a coluna projetada
+erro=cbind(yp[2:16,1],passageiros[2:16,3])
+erro=data.frame(erro)
+
+#Faz o cálculo da MAE (median absolute error)
+erro_abs = abs(erro$X1 - erro$X2)
+MAE=mean(erro_abs)
+
+#Faz o cálculo do MAPE (median absolute percentage error)
+erro_per = erro_abs/erro$X2
+MAPE=mean(erro_per)
+
+```
+
+
+#### Os valores utilizados para a projeção, possuem um erro absoluto médio (MAE) de `r format(round(MAE,2))`, e um erro absoluto percentual médio (MAPE) de `r format(round(MAPE*100,2))`%.
