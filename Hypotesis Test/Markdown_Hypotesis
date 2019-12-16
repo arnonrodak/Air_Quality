@@ -1,0 +1,62 @@
+---
+title: "Teste de Hipótese"
+author: "Arnon Rodak"
+date: "12/12/2019"
+output: html_document
+---
+
+### Uma empresa com duas filiais, angariou doze meses de faturamento, e desconfia de que a **filial** A faturou menos do que a **filial B**. Observe o faturamento abaixo:
+
+
+```{r, echo=FALSE}
+
+library(knitr)
+
+#Abrir arquivo filiais.csv
+filiais=read.csv("C:\\Users\\Elizabete\\Desktop\\Arnon\\pós data science\\filiais.csv"
+                 ,";",header=TRUE)
+kable(filiais, comment="Valores em milhares")
+
+```
+
+
+### Levando em consideração que os doze meses observados constituem todo o conjunto a ser analisado, podemos concluir que estamos tratando de uma população e não de amostra. Por se tratar de uma população, utilizar-se-á  o teste Z unicaudal à esquerda para as médias, para determinar se a média de vendas da **filial A**, é inferior à média da **filial B**. 
+
+
+### Hipóteses:
+
+
+$H_0 : \overline{x} = \mu$
+
+$H_1 : \overline{x} < \mu$
+
+
+### Fórmulas de **Z**:
+
+$Z=\frac{\overline{x}-\mu}{\frac{\theta}{\sqrt{n}}}$
+
+#### estabelecido nível de confiança de 98% $\alpha = .02$
+
+
+```{r, echo=FALSE}
+
+z= function(n, mu, mean, sd){(mean-mu)/(sd/sqrt(n))}
+z_value= z(12,
+           mean(filiais$filialB),
+           mean(filiais$filialA),
+           sd(filiais$filialA,na.rm=TRUE))
+
+z_table=-2.33
+
+z_result=if(z_value < z_table){"Rejeitar H0"} else {"Aceitar H0"}
+
+```
+
+### Efetuando os devidos cálculos chegou-se ao resultado de $Z= `r format(round(z_value,2))`$, e o resultado de Z para 98% de confiança de  $Z= `r format(round(z_table,2))`$. Dados os valores, podemos rejeitar a hipótese $H_0$, e afirmar com 98% de confiança de que a média de faturamento da **filial A**, é estatísticamente menor do que a média de faturamento da **filial B**.
+
+
+## Referências:
+
+
+### ESCOBAR, Leandro. **Análise de dados com R**. 09 nov. 2019, 07 dec. 2019. Notas de Aula.
+```{r, echo=FALSE}
