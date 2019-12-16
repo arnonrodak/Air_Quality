@@ -1,0 +1,121 @@
+---
+title: "Regressão Linear Múltipla"
+author: "Arnon Rodak"
+date: "13/12/2019"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+## Exemplo do transitor para regressão linear múltipla
+
+
+### Foi utilizado o arquivo **transitores.csv**, que compõe o ganho de transitores medido em hFe, comparado com dosagem de íons (em notação de $10^{14}$), e o tempo de exposição em minutos. O arquivo é composto de apenas 14 observações conforme demonstrado na tabela abaixo:
+
+```{r, echo=FALSE}
+
+#Abrir o arquivo
+transitor= read.csv("C:\\Users\\Elizabete\\Desktop\\Arnon\\pós data science\\transitor.csv", header=TRUE, ";")
+
+#Formatar o ganho do transitor por vírgula
+transitor_print = transitor
+transitor_print$Ganho = format(transitor_print$Ganho, big.mark=",")
+
+#Formatar a tabela para o Markdown
+library(knitr)
+
+kable(transitor_print, comment="Ganhos em transitores")
+
+```
+
+
+### À partir do tempo de exposição dos transitores aos íons, bem como a dosagem de íons aplicada, tentaremos demonstrar o ganho de hFe dos transitores através de uma equação, utilizando a regressão linear múltipla. Os coeficientes da equação sem ajuste são os que seguem:
+
+
+```{r, echo=FALSE}
+
+#Criando a regressão linear
+mod = lm(transitor$Ganho ~ transitor$Ions + transitor$Tempo)
+
+#Coletando os nomes do resultado para extrair variáveis específicas
+names = names(summary(mod))
+
+#Extraindo variáveis importantes do modelo:
+coefficients = summary(mod)$coefficients
+rsquared = summary(mod)$adj.r.squared
+
+#Expondo a tabela de coeficientes:
+kable(coefficients)
+
+```
+
+
+### O modelo nos retornou um coeficiente de determinação ($R^2$) ajustado de `r format(round(rsquared,3))`, o que significa que o modelo é capaz de explicar `r format(round(rsquared*100,1))`% das variações em ganho do transitor. No entanto, ainda sobram pontos a serem examinados.
+
+
+### O primeiro deles é o intercepto da função. Ele expressa um número para a função, caso os valores de tempo e dosagem de ions fosse 0. Visto que não faz sentido o transitor obter ganhos de hFe em um valor de tempo que não existe (0), vamos excluir o intercepto da função, para ver se ocorre aumento no valor de $R^2$ ajustado. Os coeficientes são os que seguem:
+
+
+```{r, echo=FALSE}
+
+#Criando a regressão linear
+mod = lm(transitor$Ganho ~ transitor$Ions + transitor$Tempo - 1)
+
+#Coletando os nomes do resultado para extrair variáveis específicas
+names = names(summary(mod))
+
+#Extraindo variáveis importantes do modelo:
+coefficients = summary(mod)$coefficients
+rsquared2 = summary(mod)$adj.r.squared
+
+#Expondo a tabela de coeficientes:
+kable(coefficients)
+
+```
+
+
+### Com o novo modelo, melhoramos o $R^2$ de `r format(round(rsquared,3))`, para `r format(round(rsquared2,3))`. O outros pontos a serem examinados são o valor P (também chamado de probabilidade de significância), e se o modelo atende a premissas da regressão linear. Dado uma significância do modelo de 5%, valores P abaixo ou iguais a 5% demonstram significância estatística da variável (Gujarati, 2011), de modo que se superior, rejeita-se a hipótese de que a variável é significativa. Neste caso, percebemos que **as duas variáveis escolhidas para o modelo são sim significativas**.
+
+
+### Três principais premissas utilizadas em regressões lineares, são que $y$ possa ser expressado de forma linear (mesmo que não necessariamente linear em um primeiro momento, mas que possa ter sua função linearizada), e que a variação dos resíduos das observações são constantes em torno da reta (hipótese de homocedasticidade), e que os dados seguem uma distribuição normal de probabilidade, (Gujarati, 2011). Para isso precisaremos de alguns gráficos de diagnóstico do R.
+
+
+```{r, echo=FALSE}
+
+#Expondo verificação de premissas da regressão
+par(mfrow=c(1,2))
+plot(mod, 1)
+plot(mod,2)
+
+```
+
+
+### Mesmo sabendo que nenhum modelo atenderá perfeitamente às premissas de regressão, podemos perceber no primeiro gráfico, que a reta não chega perto de ser linear, e as variações dos resíduos são pouco homogêneas. Já no segundo gráfico, percebemos que os dados se comportam muito próximos à reta diagonal, indicando possível normalidade dos dados, atendendo uma das premissas expostas acima. Mesmo não atendendo duas das premissas, **não devemos rejeitar o modelo** em decorrência do limitado tamanho da amostra. É possível que se maior a amostra, teriamos atendido os requisitos.
+
+
+## A regressão do ganho:
+
+### $y_{ganho}= 10.06x_{tempo} - 234.5x_{íons}$
+
+
+#### $x_{tempo}$: Um aumento de 1 minuto no tempo, resultaria em um aumento de 10.06 hFe de ganho no transitor.
+
+#### $x_{íons}$: Um aumento de $1.10^{14}$ na dosagem de íons, resultaria em uma diminuição de 234.5 hFe de ganho no transitor.
+
+
+## Gráfico de dispersão da regressão:
+```{r, echo=FALSE}
+
+#Expor Gráfico:
+include_graphics("C:\\Users\\Elizabete\\Desktop\\Arnon\\plot.png")
+
+```
+
+
+## Referências:
+
+
+### ESCOBAR, Leandro. **Análise de dados com R**. 09 nov. 2019, 07 dec. 2019. Notas de Aula.
+
+### GUJARATI, D. M.; PORTER, D. C. **ECONOMETRIA BÁSICA**. 5. ed. São Paulo: AMGH, 2011. 918 p.
+
