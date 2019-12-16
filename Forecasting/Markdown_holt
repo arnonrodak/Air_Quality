@@ -145,3 +145,9 @@ MAPE=mean(erro_per)
 
 
 #### Os valores utilizados para a projeção, possuem um erro absoluto médio (MAE) de `r format(round(MAE,2))`, e um erro absoluto percentual médio (MAPE) de `r format(round(MAPE*100,2))`%.
+
+
+## Referências:
+
+
+### ESCOBAR, Leandro. **Análise de dados com R**. 09 nov. 2019, 07 dec. 2019. Notas de Aula.
