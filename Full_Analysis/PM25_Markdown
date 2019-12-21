@@ -44,7 +44,7 @@ kable(q)
 
 #### Os quartis demonstram uma grande concentração de apenas um lado da curva. 75% dos valores possuem concentração menor ou igual à 137$ug/m^3$. O histograma abaixo, pode demonstrar melhor a análise dos quartis.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center'}
 
 #Análise de histograma
 hist(x, breaks=4)
@@ -110,7 +110,7 @@ kable(cors2)
 
 #### Abaixo podemos observar o comportamento das duas principais variáveis identificadas, com relação à partícula PM2.5.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center'}
 
 ## Análise de correlação
 
@@ -143,7 +143,7 @@ grid.arrange(DEWP, Iws, ncol=2)
 #### A análise de dispersão consiste no estudo de médias e desvios padrões para determinar comportamentos considerados normais e anormais das variáveis.
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center'}
 
 #Medidas de dispersão PM2.5:
 m=mean(x, na.rm=TRUE)
@@ -167,7 +167,7 @@ ggplot(base3, aes(x=base3$Iws, y=base3$pm2.5))+
 #### Podemos perceber neste caso que à partir de uma certa velocidade do vento (m/s), há um crescimento exponencial da partícula PM2.5. No entanto, há um momento em que a partícula sai totalmente de seu comportamento comum, por motivos ainda desconhecidos.
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center'}
 
 #Gráfico com os anos
 ggplot(base3, aes(x=base3$year, y=base3$pm2.5))+
