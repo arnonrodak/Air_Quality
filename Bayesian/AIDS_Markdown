@@ -1,0 +1,89 @@
+---
+title: "A Estatística e o vírus HIV"
+author: "Arnon Rodak"
+date: "23/12/2019"
+output: pdf_document
+---
+
+## **O Iníco do surto de HIV**
+
+
+#### Em 5 de junho de 1981, há 38 anos atrás, o Centro de Controle de Doenças dos EUA (CDC), publica um artigo em seu reporte semanal *Morbidade e Mortalidade* (MMWR), sobre um tipo raro de pneumonia que havia afetado 5 homens saudáveis, homossexuais em Los Angeles, California, indicando uma falha grave em seu sistema imunológico. Dois deles já haviam morrido antes que o relatório fosse publicado. Os outros três morreram logo em seguida.
+
+#### Ao final de 1982 começam a surgir os primeiros casos de crianças infectadas pela AIDS. Antes tida apenas como uma "doença dos gays", a GRID (Gay-Related Immune Deficiency), agora passaria a atingir também hemofilíacos, usuários de drogas, e outras pessoas que por ventura, fizessem transfusões de sangue, visto que ainda não se tinha conhecimento de como testar o vírus HIV em bancos de sangue.
+
+#### Apenas em 1985, a AIDS seria anunciada por portadores famosos, como o ator de filmes dos anos 60 Rock Hudson. Anunciada pelo ator ao final de julho, a AIDS tiraria sua vida em outubro do mesmo ano. Ainda no mesmo ano, 4 anos após o primeiro caso suspeito, sairia o primeiro teste comercial para a presença do vírus HIV, o **Teste ELISA** (enzyme-linked immunosorbent assay).
+
+
+
+
+## **A Estatística**
+
+
+#### Uma parte importante da estatística é a probabilidade. Muito embora grande parte das pessoas tenham contato apenas com a probabilidade clássica, existem essencialmente 3 tipos de probabilidade: Clássica, Frequentista e Bayesiana.
+
+
+#### **Probabilidade Clássica:** Atribui uma probabilidade igual às observações do evento. Exemplo: A probabilidade de tirar o número 4 em um dado não-viciado de 6 lados é de 1/6, ou 16.6%. Da mesma forma, a probabilidade de não tirar o número 4 é de 5/6, ou 83.3%.
+
+#### **Probabilidade Frequentista:** Atribui a probabilidade de uma observação, dada a frequência com que a mesma se repete dentro do evento. Exemplo: Jogar um dado não-viciado 10 vezes, e tirar 6 vezes o número 4. Assume-se que a probabilidade de tirar o número 4 é de 6/10, ou 60%.
+
+#### **Probabilidade Bayesiana:** Assume alguma informação adicional à probabilidade frequentista ou clássica, para que se chegue à uma nova probabilidade condicional, ou seja, a probabilidade de algo acontecer, dado que outra coisa aconteça. Exemplo: Jogar um dado do seu irmão 10 vezes, e tirar 6 vezes o número 4. No entanto você sabe que seu irmão tem um dado viciado que mostra o número 4 70% das vezes. A probabilidade é igual a probabilidade de tirar o número quatro dado que você estipula que este é o dado viciado que mostrará o número 4 70% das vezes.
+
+
+
+
+## **O teste ELISA**
+
+
+#### Mas o que a probabilidade tem a ver com o vírus HIV? Assim como mencionado anteriormente, o primeiro teste comercial que indicava a presença do vírus HIV foi o teste Elisa. Embora outros testes tenham surgido depois, bem como outras versões mais sofisticadas do teste Elisa, este tete tinha uma eficácia grande pra época, no entanto ainda tinha muitas margens para erros.
+
+#### Leva-se em consideração que o primeiro teste consiste nas probabilidades de alguém testar positivo e ter HIV, de **97.7%**, e a probabilidade de alguém testar negativo e não ter HIV, de **92.6%**. Ainda, admitindo que a probabilidade de uma pessoa adquirir AIDS em 2012, através de sexo anal desprotegido era de 0.65%, calcularemos a probabilidade de se obter um falso positivo com o teste ELISA.
+
+
+### Equação do teorema de Bayes:
+
+
+$P(HIV|+)=\frac{P(+|HIV).P(HIV)}{P(+|HIV).P(HIV) + P(+|HIV^c).P(HIV^c)}$
+
+
+#### $P(HIV|+)$: probabilidade de ter HIV dado que foi testado positivo;
+
+#### $P(+|HIV)$: probabilidade de ser testado positivo dado que tem HIV;
+
+#### $P(+|HIV^c)$: probabilidade se ser testado positivo dado que não tem HIV;
+
+#### $P(HIV)$: probabilidade de ter HIV;
+
+#### $P(HIV^c)$: probabilidade de não ter HIV.
+
+```{r, echo=FALSE}
+
+#Faz o teorema de Bayes
+y=function(a,b,c,d){(a*b)/((a*b)+(c*d))}
+
+#Probabilidade de ter AIDS
+p=.0065
+
+#Coeficientes do teorema
+a=0.977
+b=p
+c=0.074
+d=1-b
+
+#Resultado do teorema
+x=y(a,b,c,d)*100
+
+```
+
+
+#### O resultado do teorema, nos mostra uma probabilidade de ser portador do vírus HIV e ser testado positivo de apenas `r format(round(x,2))`%. Um resultado altíssimo para um falso positivo.
+
+
+
+
+## **Referências**
+
+
+#### STRAUBE, Trenton. Against all odds: what are your chances of getting HIV in these scenarios?. **POZ**, [S. l.], p. 1-4, 26 mar. 2014.
+
+#### https://www.cdc.gov/
