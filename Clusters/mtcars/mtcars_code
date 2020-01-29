@@ -1,0 +1,111 @@
+#AUTOR: Arnon Rodak
+#Data: 29, jan, 2020
+#Descrição: Análise de clusters do dataset mtcars. O dataset foi originalmente
+#extraído da revista americana motor trend de 1974, e compreende aspectos de
+#performance de 32 carros de 1973-74.
+
+
+#Abrir arquivo dos carros
+cars= mtcars
+
+#Faz o cluster
+cluster=hclust(dist(cars), method = "complete")
+
+#Plota o cluster
+plot(cluster)
+
+#Separa o cluster em um número certo de classes
+cut=cutree(cluster, k=3)
+
+#Coloca um quadro no gráfico, dividindo o cluster em um número certo de classes
+rect.hclust(cluster, k=3, border="green")
+
+#Cria uma tabela para mostrar qual valor pertence a qual cluster
+data=data.frame(cut=cut)
+
+#Cria os cluster de número 01:03
+cluster01=cars[which(data==1),]
+cluster02=cars[which(data==2),]
+cluster03=cars[which(data==3),]
+
+#/////////////////////////////Automáticos e Manuais////////////////////
+
+cluster.trans= data.frame(
+  c1=c(length(which(cluster01$am==0)),length(which(cluster01$am==1))),
+  c2=c(length(which(cluster02$am==0)),length(which(cluster02$am==1))),
+  c3=c(length(which(cluster03$am==0)),length(which(cluster03$am==1)))
+)
+
+row.names(cluster.trans) = c("Automatic","Manual")
+
+#c1 tem mais manuais, e c2,3 mais automáticos.
+
+#///////////////////////////Miles per Galon//////////////////////////////
+
+cluster.galon= data.frame(mpg=
+                            c(mean(cluster01$mpg),
+                              mean(cluster02$mpg),
+                              mean(cluster03$mpg)))
+
+row.names(cluster.galon)=c("c1","c2", "c3")
+
+#c1 é mais econômico do que c2,3.
+
+
+#//////Existe correlação entre mpg e transmicao?/////////////////////////
+
+boxplot(mpg~am, data=cars, xlab="transmition type", ylab="miles per galon")
+
+#Segundo nossa amostra carros manuais são mais econômicos do que automáticos.
+
+
+#//////carros automáticos tem mais hp?/////////////////////////
+
+boxplot(hp~am, data=cars, xlab="transmition type", ylab="horse powers")
+
+#Segundo nossa amostra sim. Carros automáticos tem mais hp,
+#com exceção de duas observações.
+
+
+#/////////////////até agora//////////////////
+
+#c1<- carros manuais, econômicos, 
+#c2<- carrps automáticos, pouco econômicos
+#c3<- carrps automáticos, pouco econômicos
+
+#/////////////////////Cilindros///////////////////
+
+cluster.cyl= data.frame(cyl=
+                            c(mean(cluster01$cyl),
+                              mean(cluster02$cyl),
+                              mean(cluster03$cyl)))
+
+row.names(cluster.cyl)=c("c1","c2", "c3")
+
+#Percebemos poucos cilindros no c1, e mais em c2,3.
+
+
+#/////////////////até agora//////////////////
+
+#c1<- carros manuais, econômicos, carros mais lentos,
+#c2<- carrps automáticos, pouco econômicos, carros mais rápidos,
+#c3<- carrps automáticos, pouco econômicos, apenas carros rápidos,
+
+
+#/////////////////////////////Motores verticais, e horizontais///////////////
+
+cluster.vs= data.frame(
+  c1=c(length(which(cluster01$vs==0)),length(which(cluster01$vs==1))),
+  c2=c(length(which(cluster02$vs==0)),length(which(cluster02$vs==1))),
+  c3=c(length(which(cluster03$vs==0)),length(which(cluster03$vs==1)))
+)
+
+row.names(cluster.vs) = c("Verticais","Horizontais")
+
+#c1 tem mais motores horizontais, e c2,3 verticais.
+
+#/////////////////até agora//////////////////
+
+#c1<- carros manuais, econômicos, carros mais lentos, predominância de motor h
+#c2<- carros automáticos, pouco econômicos, carros mais rápidos, predominância de motor v
+#c3<- carros automáticos, pouco econômicos, apenas carros rápidos, apenas motor v
