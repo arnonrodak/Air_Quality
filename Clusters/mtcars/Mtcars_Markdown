@@ -1,0 +1,255 @@
+---
+title: "Análise de Agrupamentos"
+author: "Arnon Rodak"
+date: "1/29/2020"
+output: pdf_document
+---
+
+## **Sobre a análise**
+
+#### A análise de agrupamentos se refere à classificação de observações de uma amostra ou população, em grupos se caracterizam por comportamentos semelhantes. Tais grupos também são tratados pela nomenclatura de *"cluster"*. Tais comportamentos semelhantes são definidos, neste caso sem supervisão, por uma determinada distância estatística entre os dados. Neste caso utilizarei a distância euclidiana, que nada mais é do que o somatório da raiz quadrada das diferenças entre os dados, ou seja, uma aplicação repetida do teorema de pitágoras.
+
+
+
+
+## **Sobre os dados**
+
+#### Os dados apresentados para a presente análise fazem parte do dataset ***mtcars*** do próprio software R. Ele foi retirado da revista americana *Motor Trend*, de 1974 e compreende 11 características de performance de 32 carros entre 1973 e 1974.
+
+
+
+
+## **Apresentação dos dados**
+
+#### Os dados estão disponíveis abaixo na **Tabela 1.1**, bem como os significados das siglas em **Tabela 1.2**.
+
+```{r, echo=FALSE}
+
+#Abrir arquivo dos carros
+cars= mtcars
+
+#Plota na tabela
+library(knitr)
+
+kable(cars, caption= "Tabela 1.1")
+
+```
+
+
+```{r, echo=FALSE}
+
+legendas= data.frame(
+  Siglas= c(
+    "Milhas por galão de combustível",
+    "Número de cilindros",
+    "Cilindradas (em polegadas cúbicas)",
+    "Cavalos de potência",
+    "Relação de eixo traseiro",
+    "Peso (em mil libras)",
+    "Tempo para percorrer 1/4 de milha",
+    "0= Motor em V, 1=Motor horizontal",
+    "0= Automático, 1=Manual",
+    "Número de marchas (sem ré)",
+    "Número de carburadores"
+  )
+)
+
+row.names(legendas) = colnames(mtcars)
+
+kable(legendas, caption= "Tabela 1.2")
+
+```
+
+
+## **Agrupamento dos dados**
+
+#### Após apresentados os dados, os carros tiveram suas medidas tomadas de acordo com os fatores, chegando no **Dendograma 1.1**. Após a análise destes clusters, foi deliberadamente estabelecida uma separação em 03 grupos, os quais mais se identificavam dentro de suas variáveis conforme apresentado pelo **Dendograma 1.2**.
+
+```{r, echo=FALSE}
+#Faz o cluster
+cluster=hclust(dist(cars), method = "complete")
+
+#Plota o cluster
+plot(cluster, main = "Dendograma 1.1", ylab="distância euclidiana", xlab="modelos de carros")
+
+#Separa o cluster em um número certo de classes
+cut=cutree(cluster, k=3)
+
+#Cria uma tabela para mostrar qual valor pertence a qual cluster
+data=data.frame(cut=cut)
+
+#Cria os cluster de número 01:03
+cluster01=cars[which(data==1),]
+cluster02=cars[which(data==2),]
+cluster03=cars[which(data==3),]
+
+```
+
+```{r, echo=FALSE}
+
+#Plota o cluster novamente
+plot(cluster, main = "Dendograma 1.2", ylab="distância euclidiana", xlab="modelos de carros")
+
+#Coloca um quadro no gráfico, dividindo o cluster em um número certo de classes
+rect.hclust(cluster, k=3, border="green")
+```
+
+
+#### Compreender-se-á como cluster 01, 02, e 03 os respectivos quadros presentes no **Dendograma 1.2** acima, da direita para a esquerda.
+
+
+## **Análise de dados**
+
+#### A partir deste momento, faremos pequenas afirmações a medida em que novas descobertas forem traçadas à partir dos dados, até chegarmos em uma afirmação mais geral e contundente ao final. O quadro abaixo nos mostra a quantidade de carros com transmissão automática e manual por clusters.
+
+```{r, echo=FALSE}
+
+#/////////////////////////////Automáticos e Manuais////////////////////
+
+cluster.trans= data.frame(
+  c1=c(length(which(cluster01$am==0)),length(which(cluster01$am==1))),
+  c2=c(length(which(cluster02$am==0)),length(which(cluster02$am==1))),
+  c3=c(length(which(cluster03$am==0)),length(which(cluster03$am==1)))
+)
+
+row.names(cluster.trans) = c("Automatic","Manual")
+
+#c1 tem mais manuais, e c2,3 mais automáticos.
+
+kable(cluster.trans)
+
+```
+
+
+#### Podemos perceber que o cluster 01 possui maior proporção de carros manuais, e os clusters 02 e 03, possuem maior proporção de carros automáticos.
+
+
+#### O quadro abaixo nos mostra a quantidade média de milhas percorridas por galão de combustível (padrão EUA).
+
+
+```{r, echo=FALSE}
+
+#///////////////////////////Miles per Galon//////////////////////////////
+
+cluster.galon= data.frame(mpg=
+                            c(mean(cluster01$mpg),
+                              mean(cluster02$mpg),
+                              mean(cluster03$mpg)))
+
+row.names(cluster.galon)=c("c1","c2", "c3")
+
+kable(cluster.galon)
+
+#c1 é mais econômico do que c2,3.
+
+```
+
+
+#### Percebemos que o cluster 01 possui carros mais econômicos do que o cluster 02 e 03, mas ainda não sabemos o por que disso. Haveria uma ligação entre tipo de transmissão e autonomia de combustível?
+
+
+#### O gráfico de boxplot abaixo nos ajudará a confirmar ou não tal hipótese. A caixa do gráfico configura o quartil com maior probabilidade de ocorrência dentro da amostra, bem como valores máximos e mínimos.
+
+```{r, echo=FALSE}
+
+#//////Existe correlação entre mpg e transmicao?/////////////////////////
+
+boxplot(mpg~am, data=cars, xlab="transmition type", ylab="miles per galon")
+
+#Segundo nossa amostra carros manuais são mais econômicos do que automáticos.
+
+```
+
+#### Segundo a nossa amostra, podemos confirmar a hipótese de que há ***matematicamente*** uma relação entre tipo de transmissão e autonomia. Isto não significa que possamos explicar a autonomia através do tipo de transmissão. Levantemos outra hipótese: haveria relação entre o tipo de transmissão e a quantidade de cavalos? Observe o boxplot abaixo.
+
+```{r, echo=FALSE}
+#//////carros automáticos tem mais hp?/////////////////////////
+
+boxplot(hp~am, data=cars, xlab="transmition type", ylab="horse powers")
+
+#Segundo nossa amostra sim. Carros automáticos tem mais hp,
+#com exceção de duas observações.
+
+```
+
+
+#### Novamente, segundo a nossa amostra, podemos confirmar a hipótese de que há ***matematicamente*** uma relação entre tipo de transmissão e cavalos. Mas não podemos concluir ou afirmar com certeza ainda o motivo de tal relação.
+
+
+
+
+#### No entanto até agora podemos concluir algumas coisas sobre os clusters:
+
+* **Cluster 01**: carros manuais, econômicos; 
+* **Cluster 02**: carros automáticos, pouco econômicos;
+* **Cluster 03**: carros automáticos, pouco econômicos.
+
+
+
+#### Continuemos a análise, agora com base no número médio de cilindros. O número de cilindros é uma indicação de torque. Quanto maior o torque, maior a potência do carro em baixas rotações, ou seja, velocidades rápidas com marchas baixas.
+
+
+```{r, echo=FALSE}
+
+#/////////////////////Cilindros///////////////////
+
+cluster.cyl= data.frame(cyl=
+                            c(mean(cluster01$cyl),
+                              mean(cluster02$cyl),
+                              mean(cluster03$cyl)))
+
+row.names(cluster.cyl)=c("c1","c2", "c3")
+
+kable(cluster.cyl)
+
+#Percebemos poucos cilindros no c1, e mais em c2,3.
+
+```
+
+
+#### Percebemos que há predominância de poucos cilindros no cluster 01, predominância de maior número de cilindros no cluster 02, e unanimidade no número de cilindros no cluster 03.
+
+
+#### Uma outra medida considerada importante nos carros seria a posição do motor. Um motor até 5 cilindros geralmente é feito de forma horizontal, o que garante menor ruído. Um motor de 6 cilindros horizontal, tem muito menos ruído e é muito mais suave do que um motor em formato V, embora com o mesmo torque. Acima de 6 cilindros, geralmente todos os motores são feitos em V, de forma a poupar espaço e garantir eficiência. Motores acima do V6 geralmente não tem mais o mesmo nível de ruído e são mais suaves, embora muito mais potentes.
+
+
+#### A tabela abaixo, mostra a predominância de posição dos motores nos clusters.
+
+
+```{r, echo=FALSE}
+
+#/////////////////////////////Motores verticais, e horizontais///////////////
+
+cluster.vs= data.frame(
+  c1=c(length(which(cluster01$vs==0)),length(which(cluster01$vs==1))),
+  c2=c(length(which(cluster02$vs==0)),length(which(cluster02$vs==1))),
+  c3=c(length(which(cluster03$vs==0)),length(which(cluster03$vs==1)))
+)
+
+row.names(cluster.vs) = c("Formato V","Horizontais")
+
+kable(cluster.vs)
+
+#c1 tem mais motores horizontais, e c2,3 verticais.
+
+```
+
+
+#### Percebe-se a predominância de motores horizontais no cluster 01, predominância de motores em V no cluster 02 e unanimidade de motores em V no cluster 03.
+
+
+
+
+#### A partir deste momento podemos traçar as principais características dos clusters:
+
+* **Cluster 01**: carros manuais, econômicos, mais lentos, com predominância de motor horizontal;
+
+* **Cluster 02**: carros automáticos, pouco econômicos, mais rápidos, com predominância de motor em V;
+
+* **Cluster 03**: carros automáticos, pouco econômicos, apenas carros rápidos, apenas com motor em V.
+
+
+
+
+#### Agora sim, podemos afirmar que a relação entre tipo de transmissão e potência do carro, era apenas espúria, ou seja, os carros mais lentos da amostra, possuem predominância de câmbio manual, e os carros mais rápidos, predominância de câmbio automático. Não há uma relação de causalidade entre os dois.
+
